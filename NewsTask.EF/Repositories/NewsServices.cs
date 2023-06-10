@@ -21,15 +21,15 @@ namespace NewsTask.EF.Repositories
 
         public async Task<News> GetById(int id)
         {
-            return await _context.News.Include(n => n.Author).SingleOrDefaultAsync(n => n.Id == id); 
+            return await _context.News.Include(n => n.Author).SingleOrDefaultAsync(n => n.Id == id);
         }
 
         public async Task<IEnumerable<News>> GetAll(int authorId = 0)
         {
 
             return await _context.News
-                .Where(n => n.AuthorId == authorId || authorId == 0 )
-                .Include(n=>n.Author).ToListAsync();
+                .Where(n => n.AuthorId == authorId || authorId == 0)
+                .Include(n => n.Author).ToListAsync();
         }
 
         public async Task<News> Create(News news)
@@ -47,12 +47,33 @@ namespace NewsTask.EF.Repositories
             return news;
         }
 
+        public List<News> UpdateNews(List<News> news)
+        {
+            _context.Update(news);
+            _context.SaveChangesAsync();
+            return news;
+        }
+
         public News Delete(News news)
         {
             _context.Remove(news);
             _context.SaveChanges();
 
             return news;
+        }
+
+        public async Task PublishToBePublished()
+        {
+            var newsList = await _context.News.Where(x => !x.IsPublish && x.PublicationDate.Date <= DateTime.Now.Date).ToListAsync();
+            if (newsList.Count > 0)
+            {
+                newsList.ForEach(x =>
+                {
+                    x.IsPublish = true;
+                });
+
+                UpdateNews(newsList);
+            }
         }
     }
 }

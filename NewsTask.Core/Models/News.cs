@@ -13,13 +13,13 @@ namespace NewsTask.Core.Models
 
 
         public int Id { get; set; }
-        [Required,MaxLength(250)]
+        [Required, MaxLength(250)]
         public string Title { get; set; }
-        [Required,MaxLength(2500)]
+        [Required, MaxLength(2500)]
         public string NewsDescription { get; set; }
         public DateTime CreationDate { get { return _CreationDate; } set { _CreationDate = value; } }
-        [Required,MaxLength(250)]
-        public string PublicationDate { get; set; }
+        [Required]
+        public DateTime PublicationDate { get; set; }
         public byte[]? Image { get; set; }
         public bool IsPublish { get; set; }
 

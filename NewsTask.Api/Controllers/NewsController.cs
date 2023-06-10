@@ -34,7 +34,7 @@ namespace NewsTask.Api.Controllers
         {
             return Ok(await _newsservices.GetAll());
         }
-        
+
         [HttpGet("GetByAuthorId")]
         public async Task<IActionResult> GetByAuthorId(int authorId)
         {
@@ -46,7 +46,7 @@ namespace NewsTask.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] NewsDto newsDto)
         {
-            
+
             var isValidAuthor = await _authServices.IsValidAuthor(newsDto.AuthorId);
             if (!isValidAuthor)
                 return BadRequest("Invalid Author Id");
@@ -68,9 +68,9 @@ namespace NewsTask.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(int id,[FromForm] NewsDto newsDto)
+        public async Task<IActionResult> Update(int id, [FromForm] NewsDto newsDto)
         {
-            var news  = await _newsservices.GetById(id);
+            var news = await _newsservices.GetById(id);
             if (news == null)
                 return NotFound();
 
@@ -101,8 +101,27 @@ namespace NewsTask.Api.Controllers
             if (news == null)
                 return NotFound();
 
-            var result =  _newsservices.Delete(news);
+            var result = _newsservices.Delete(news);
             return Ok(result);
+        }
+
+        [HttpPut("Publish")]
+        public async Task<IActionResult> Publish(int id)
+        {
+            var news = await _newsservices.GetById(id);
+            if (news == null)
+                return NotFound();
+
+            if (news.IsPublish)
+                return BadRequest("This news is already published");
+
+            if (news.PublicationDate.Date < DateTime.Now.Date)
+                return BadRequest($"This News Can't be published before {news.PublicationDate.Date}");
+
+            news.IsPublish = true;
+            _newsservices.Update(news);
+
+            return Ok();
         }
     }
 }

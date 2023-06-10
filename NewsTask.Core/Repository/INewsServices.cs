@@ -12,11 +12,14 @@ namespace NewsTask.Core.Repository
     {
 
         Task<News> GetById(int id);
-        Task<IEnumerable<News>> GetAll(int authorId =0);
+        Task<IEnumerable<News>> GetAll(int authorId = 0);
 
         Task<News> Create(News news);
         News Update(News news);
+        List<News> UpdateNews(List<News> news);
         News Delete(News news);
+
+        Task PublishToBePublished();
 
     }
 }

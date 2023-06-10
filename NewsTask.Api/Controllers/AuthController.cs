@@ -31,7 +31,7 @@ namespace NewsTask.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Token")]
+        [HttpPost("Login")]
         public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequestModel model)
         {
             if (!ModelState.IsValid)

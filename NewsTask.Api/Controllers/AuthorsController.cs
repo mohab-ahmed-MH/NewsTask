@@ -35,7 +35,7 @@ namespace NewsTask.Api.Controllers
             return Ok(await _authServices.GetAll());
         }
 
-        [HttpPost]
+        [HttpPost("CreateAuthor")]
         public async Task<IActionResult> Create(AuthorDto authorDto)
         {
             var author = new Author

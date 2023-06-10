@@ -119,7 +119,7 @@ namespace NewsTask.EF.Repositories
                 issuer: _jwt.Issuer,
                 audience: _jwt.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(_jwt.DurationInDays),
+                expires: DateTime.Now.AddDays(4),
                 signingCredentials: signingCredentials);
 
             return jwtSecurityToken;
