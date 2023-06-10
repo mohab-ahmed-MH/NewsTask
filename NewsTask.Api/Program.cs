@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using NewsTask.Api.Helpers;
+using NewsTask.Core.Helpers;
 using NewsTask.Core.Models;
 using NewsTask.Core.Repository;
 using NewsTask.EF;

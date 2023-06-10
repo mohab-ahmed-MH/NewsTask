@@ -1,4 +1,4 @@
-﻿namespace NewsTask.Api.Helpers
+﻿namespace NewsTask.Core.Helpers
 {
     public class JWT
     {
