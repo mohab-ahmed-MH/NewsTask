@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,36 +12,31 @@ using NewsTask.Mvc.Models;
 
 namespace NewsTask.Mvc.Controllers
 {
-    public class NewsController : Controller
+    public class AuthorController : Controller
     {
         private readonly NewsTaskMvcContext _context;
         private readonly HttpClient _client;
-        private readonly IAPIManager<NewsViewModel> _aPIManager;
-        private readonly IAPIManager<AuthorViewModel> _authorAPIManager;
+        private readonly IAPIManager<AuthorViewModel> _aPIManager;
         private string _controllerName;
-        private string _authorControllerName;
 
-        public NewsController(NewsTaskMvcContext context, HttpClient client,
-            IAPIManager<NewsViewModel> aPIManager, IConfiguration configuration,
-            IAPIManager<AuthorViewModel> authorAPIManager)
+        public AuthorController(NewsTaskMvcContext context, HttpClient client,
+            IAPIManager<AuthorViewModel> aPIManager, IConfiguration configuration)
         {
             _context = context;
             _client = client;
             _aPIManager = aPIManager;
-            _authorAPIManager = authorAPIManager;
-            _controllerName = configuration.GetSection("apis:newsControllerUrl").Value;
-            _authorControllerName = configuration.GetSection("apis:authorsControllerUrl").Value;
+            _controllerName = configuration.GetSection("apis:authorsControllerUrl").Value;
         }
 
-        // GET: News
-        public async Task<IActionResult> Index()
+        // GET: AuthorViewModels
+        public IActionResult Index()
         {
             var list = _aPIManager.GetList(_controllerName);
 
             return View(list);
         }
 
-        // GET: News/Details/5
+        // GET: AuthorViewModels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -53,70 +49,52 @@ namespace NewsTask.Mvc.Controllers
             return View(author);
         }
 
-        // GET: News/Create
+        // GET: AuthorViewModels/Create
         public IActionResult Create()
         {
-            ViewBag.Authors = _authorAPIManager.GetList(_authorControllerName);
-            var news = new NewsViewModel();
-            news.PublicationDate = DateTime.Now;
-            return View(news);
+            return View();
         }
 
-        // POST: News/Create
+        // POST: AuthorViewModels/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(NewsViewModel newsViewModel)
+        public async Task<IActionResult> Create([Bind("Name,Id")] AuthorViewModel authorViewModel)
         {
             if (ModelState.IsValid)
             {
-                if (newsViewModel.ImageFile.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        newsViewModel.ImageFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        //string base64 = Convert.ToBase64String(fileBytes);
-                        if (fileBytes is not null)
-                            newsViewModel.Image = fileBytes;
-                    }
-                }
-                newsViewModel.ImageFile = null;
-                _aPIManager.CreateEntity(newsViewModel, _controllerName);
+                _aPIManager.CreateEntity(authorViewModel, _controllerName);
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(newsViewModel);
+            return View(authorViewModel);
         }
 
-        // GET: News/Edit/5
+        // GET: AuthorViewModels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.NewsViewModel == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var newsViewModel = await _context.NewsViewModel.FindAsync(id);
-            if (newsViewModel == null)
+            var authorViewModel = _aPIManager.GetById(id ?? 0, _controllerName);
+            if (authorViewModel == null)
             {
                 return NotFound();
             }
 
-            ViewBag.Authors = _authorAPIManager.GetList(_authorControllerName);
-
-            return View(newsViewModel);
+            return View(authorViewModel);
         }
 
-        // POST: News/Edit/5
+        // POST: AuthorViewModels/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,NewsDescription,PublicationDate,Image,AuthorId")] NewsViewModel newsViewModel)
+        public async Task<IActionResult> Edit(int? id, [Bind("Name,Id")] AuthorViewModel authorViewModel)
         {
-            if (id != newsViewModel.Id)
+            if (id != authorViewModel.Id)
             {
                 return NotFound();
             }
@@ -125,7 +103,7 @@ namespace NewsTask.Mvc.Controllers
             {
                 try
                 {
-                    _aPIManager.UpdateEntity(newsViewModel, _controllerName);
+                    _aPIManager.UpdateEntity(authorViewModel, _controllerName);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -133,10 +111,10 @@ namespace NewsTask.Mvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(newsViewModel);
+            return View(authorViewModel);
         }
 
-        // GET: News/Delete/5
+        // GET: AuthorViewModels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -153,7 +131,7 @@ namespace NewsTask.Mvc.Controllers
             return View(authorViewModel);
         }
 
-        // POST: News/Delete/5
+        // POST: AuthorViewModels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)

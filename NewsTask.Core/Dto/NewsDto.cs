@@ -10,6 +10,7 @@ namespace NewsTask.Core.Dto
 {
     public class NewsDto
     {
+        public int? Id { get; set; }
         [Required, MaxLength(250)]
         public string Title { get; set; }
         [Required, MaxLength(2500)]

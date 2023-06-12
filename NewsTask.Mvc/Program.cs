@@ -1,5 +1,15 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NewsTask.Mvc.Data;
+using NewsTask.Mvc.Interfaces;
+using NewsTask.Mvc.Managers;
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<NewsTaskMvcContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NewsTaskMvcContext") ?? throw new InvalidOperationException("Connection string 'NewsTaskMvcContext' not found.")));
+
+builder.Services.AddScoped(typeof(IAPIManager<>), typeof(APIManager<>));
+builder.Services.AddHttpClient();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

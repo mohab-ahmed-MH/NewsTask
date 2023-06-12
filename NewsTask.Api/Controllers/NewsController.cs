@@ -44,7 +44,7 @@ namespace NewsTask.Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] NewsDto newsDto)
+        public async Task<IActionResult> Create([FromBody] NewsDto newsDto)
         {
 
             var isValidAuthor = await _authServices.IsValidAuthor(newsDto.AuthorId);
@@ -68,9 +68,9 @@ namespace NewsTask.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(int id, [FromForm] NewsDto newsDto)
+        public async Task<IActionResult> Update([FromBody] NewsDto newsDto)
         {
-            var news = await _newsservices.GetById(id);
+            var news = await _newsservices.GetById(newsDto.Id ?? 0);
             if (news == null)
                 return NotFound();
 
@@ -81,16 +81,14 @@ namespace NewsTask.Api.Controllers
             using var datastream = new MemoryStream();
             newsDto.Image.CopyToAsync(datastream);
 
-            var newsUpdate = new News
-            {
-                Title = newsDto.Title,
-                AuthorId = newsDto.AuthorId,
-                NewsDescription = newsDto.NewsDescription,
-                PublicationDate = newsDto.PublicationDate,
-                Image = datastream.ToArray(),
-            };
 
-            _newsservices.Update(newsUpdate);
+            news.Title = newsDto.Title;
+            news.AuthorId = newsDto.AuthorId;
+            news.NewsDescription = newsDto.NewsDescription;
+            news.PublicationDate = newsDto.PublicationDate;
+            news.Image = datastream.ToArray();
+
+            _newsservices.Update(news);
             return Ok(news);
         }
 

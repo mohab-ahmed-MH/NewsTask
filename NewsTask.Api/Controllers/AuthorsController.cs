@@ -7,7 +7,7 @@ using NewsTask.Core.Repository;
 
 namespace NewsTask.Api.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthorsController : ControllerBase
@@ -26,17 +26,29 @@ namespace NewsTask.Api.Controllers
             if (author == null)
                 return NotFound();
 
-            return Ok(author);
+            var authorDTO = new AuthorDto(author.Name, author.Id);
+
+            return Ok(authorDTO);
         }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _authServices.GetAll());
+            var authors = await _authServices.GetAll();
+            if (authors == null)
+                return NotFound();
+
+            var authorsDTOs = new List<AuthorDto>();
+            authors.ToList().ForEach(author =>
+            {
+                authorsDTOs.Add(new AuthorDto(author.Name, author.Id));
+            });
+
+            return Ok(authorsDTOs);
         }
 
-        [HttpPost("CreateAuthor")]
-        public async Task<IActionResult> Create(AuthorDto authorDto)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] AuthorDto authorDto)
         {
             var author = new Author
             {
@@ -44,30 +56,36 @@ namespace NewsTask.Api.Controllers
             };
 
             await _authServices.Create(author);
-            return Ok(author);
+            var authorDTO = new AuthorDto(author.Name, author.Id);
+
+            return Ok(authorDTO);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(int id ,AuthorDto authorDto)
+        public async Task<IActionResult> Update([FromBody] AuthorDto authorDto)
         {
-            var author = await _authServices.GetById(id);
+            if (authorDto.Id is null) return NotFound();
+
+            var author = await _authServices.GetById(authorDto.Id ?? 0);
             if (author == null)
                 return NotFound();
 
-            var authorUpdate = new Author
-            {
-                Name = authorDto.Name
-            };
+            author.Name = authorDto.Name;
 
-            _authServices.Update(authorUpdate);
-            return Ok(author);
+
+
+            _authServices.Update(author);
+
+            var authorDTO = new AuthorDto(author.Name, author.Id);
+
+            return Ok(authorDTO);
         }
 
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
             var author = await _authServices.GetById(id);
-            if(author == null)
+            if (author == null)
                 return NotFound();
 
             _authServices.Delete(author);
