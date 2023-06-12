@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsTask.Api", "NewsTask.Api\NewsTask.Api.csproj", "{9CEB9A73-9DE6-4C8D-BCBD-E39697F0E3C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsTask.Api", "NewsTask.Api\NewsTask.Api.csproj", "{9CEB9A73-9DE6-4C8D-BCBD-E39697F0E3C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsTask.Core", "NewsTask.Core\NewsTask.Core.csproj", "{57309944-4CC9-402D-98FB-8FC9CF642BF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsTask.Core", "NewsTask.Core\NewsTask.Core.csproj", "{57309944-4CC9-402D-98FB-8FC9CF642BF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsTask.EF", "NewsTask.EF\NewsTask.EF.csproj", "{AC3F76D6-EA9F-4C41-9E97-C20190EED69E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewsTask.EF", "NewsTask.EF\NewsTask.EF.csproj", "{AC3F76D6-EA9F-4C41-9E97-C20190EED69E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsTask.Mvc", "NewsTask.Mvc\NewsTask.Mvc.csproj", "{254BB401-ACAB-4E80-951E-21A0C67FD771}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{AC3F76D6-EA9F-4C41-9E97-C20190EED69E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC3F76D6-EA9F-4C41-9E97-C20190EED69E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC3F76D6-EA9F-4C41-9E97-C20190EED69E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{254BB401-ACAB-4E80-951E-21A0C67FD771}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{254BB401-ACAB-4E80-951E-21A0C67FD771}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{254BB401-ACAB-4E80-951E-21A0C67FD771}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{254BB401-ACAB-4E80-951E-21A0C67FD771}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
