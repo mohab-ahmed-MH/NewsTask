@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NewsTask.Core.Dto;
 using NewsTask.Core.Models;
 using NewsTask.Core.Repository;
+using System.Data;
 using System.IO;
 
 namespace NewsTask.Api.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class NewsController : ControllerBase

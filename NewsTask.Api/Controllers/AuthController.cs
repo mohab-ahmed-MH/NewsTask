@@ -40,7 +40,7 @@ namespace NewsTask.Api.Controllers
             var result = await _authService.GetTokenAsync(model);
 
             if (!result.IsAuthenticated)
-                return BadRequest(result.Message);
+                return Unauthorized(result.Message);
 
             return Ok(result);
         }

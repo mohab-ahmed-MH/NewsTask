@@ -7,7 +7,7 @@ using NewsTask.Core.Repository;
 
 namespace NewsTask.Api.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthorsController : ControllerBase

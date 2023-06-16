@@ -113,6 +113,8 @@ namespace NewsTask.Mvc.Managers
                     string data = response.Content.ReadAsStringAsync().Result;
                     entityList = JsonConvert.DeserializeObject<List<T>>(data);
                 }
+                else
+                    throw new Exception(response.ReasonPhrase);
 
                 return entityList;
 
