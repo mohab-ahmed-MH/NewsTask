@@ -13,12 +13,18 @@ namespace NewsTask.Mvc.Managers
         private readonly HttpClient _client;
         private IConfiguration _configuration;
         private string _baseURL;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public APIManager(HttpClient client, IConfiguration configuration)
+
+        public APIManager(HttpClient client, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _client = client;
             _configuration = configuration;
             _baseURL = configuration.GetSection("apis:baseAPI").Value;
+            _httpContextAccessor = httpContextAccessor;
+            var token = _httpContextAccessor.HttpContext.Session.GetString("JWT_Token");
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
 
         }
 

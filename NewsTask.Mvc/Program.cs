@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using NewsTask.Mvc.Data;
 using NewsTask.Mvc.Interfaces;
 using NewsTask.Mvc.Managers;
 using System.Net;
@@ -10,9 +9,6 @@ using System.Text;
 using Microsoft.Extensions.Http;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<NewsTaskMvcContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("NewsTaskMvcContext") ?? throw new InvalidOperationException("Connection string 'NewsTaskMvcContext' not found.")));
-
 
 builder.Services.AddSession();
 builder.Services.AddAuthentication(options =>
@@ -23,6 +19,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 
+    
 .AddJwtBearer(options =>
 {
     options.SaveToken = true;
@@ -37,10 +34,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(typeof(IAPIManager<>), typeof(APIManager<>));
 builder.Services.AddScoped(typeof(IAuthAPIManager), typeof(AuthAPIManager));
 
 builder.Services.AddHttpClient("HttpMessageHandler").AddHttpMessageHandler<NewsTask.Mvc.Handlers.TokenHandler>();
+builder.Services.AddTransient<NewsTask.Mvc.Handlers.TokenHandler>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

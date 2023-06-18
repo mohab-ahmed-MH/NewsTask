@@ -12,7 +12,7 @@ namespace NewsTask.Mvc.Handlers
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             //get the token
-            var accessToken = await accessor.HttpContext.GetTokenAsync("access_token");
+            var accessToken = await accessor.HttpContext.GetTokenAsync("JWT_Token");
             //add header
             request.Headers.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);

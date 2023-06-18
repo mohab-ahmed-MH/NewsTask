@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using NewsTask.Mvc.Data;
 using NewsTask.Mvc.Interfaces;
 using NewsTask.Mvc.Models;
 
@@ -15,18 +14,16 @@ namespace NewsTask.Mvc.Controllers
     [Authorize(Roles = "Admin")]
     public class NewsController : Controller
     {
-        private readonly NewsTaskMvcContext _context;
         private readonly HttpClient _client;
         private readonly IAPIManager<NewsViewModel> _aPIManager;
         private readonly IAPIManager<AuthorViewModel> _authorAPIManager;
         private string _controllerName;
         private string _authorControllerName;
 
-        public NewsController(NewsTaskMvcContext context, HttpClient client,
+        public NewsController(HttpClient client,
             IAPIManager<NewsViewModel> aPIManager, IConfiguration configuration,
             IAPIManager<AuthorViewModel> authorAPIManager)
         {
-            _context = context;
             _client = client;
             _aPIManager = aPIManager;
             _authorAPIManager = authorAPIManager;
@@ -95,18 +92,19 @@ namespace NewsTask.Mvc.Controllers
         // GET: News/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.NewsViewModel == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var newsViewModel = await _context.NewsViewModel.FindAsync(id);
+            var newsViewModel = _aPIManager.GetById(id ?? 0, _controllerName);
             if (newsViewModel == null)
             {
                 return NotFound();
             }
 
-            ViewBag.Authors = _authorAPIManager.GetList(_authorControllerName);
+
+
 
             return View(newsViewModel);
         }

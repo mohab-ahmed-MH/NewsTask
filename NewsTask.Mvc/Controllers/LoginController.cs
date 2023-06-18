@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NewsTask.Mvc.Data;
 using NewsTask.Mvc.Interfaces;
 using NewsTask.Mvc.Managers;
 using NewsTask.Mvc.Models;

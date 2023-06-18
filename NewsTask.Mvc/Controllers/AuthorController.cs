@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NewsTask.Mvc.Data;
 using NewsTask.Mvc.Interfaces;
 using NewsTask.Mvc.Models;
 
@@ -10,15 +9,13 @@ namespace NewsTask.Mvc.Controllers
     [Authorize(Roles = "Admin")]
     public class AuthorController : Controller
     {
-        private readonly NewsTaskMvcContext _context;
         private readonly HttpClient _client;
         private readonly IAPIManager<AuthorViewModel> _aPIManager;
         private string _controllerName;
 
-        public AuthorController(NewsTaskMvcContext context, HttpClient client,
+        public AuthorController(HttpClient client,
             IAPIManager<AuthorViewModel> aPIManager, IConfiguration configuration)
         {
-            _context = context;
             _client = client;
             _aPIManager = aPIManager;
             _controllerName = configuration.GetSection("apis:authorsControllerUrl").Value;
